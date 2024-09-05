@@ -11,7 +11,7 @@ export const Colors = {
 		tint: '#DC0A2D',
 		grayDark: '#212121',
 		grayMedium: '#666666',
-		grayLight: '#E0E0E0',
+		grayLight: '#E0E000',
 		grayBackground: '#EFEFEF',
 		grayWhite: '#FFFFFF',
 	},
