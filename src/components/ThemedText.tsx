@@ -10,6 +10,7 @@ type ThemedTextProps = TextProps & {
 export default function ThemedText({
 	variant,
 	color,
+	style,
 	...rest
 }: ThemedTextProps) {
 	const colors = useThemeColors();
@@ -18,6 +19,7 @@ export default function ThemedText({
 			style={[
 				styles[variant ?? 'body3'],
 				{ color: colors[color ?? 'grayDark'] },
+				style,
 			]}
 			{...rest}
 		/>

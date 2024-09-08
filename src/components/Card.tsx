@@ -9,7 +9,7 @@ export default function Card({ style, ...rest }: CardProps) {
 	return (
 		<View
 			{...rest}
-			style={[style, styles, { backgroundColor: colors.grayLight }]}></View>
+			style={[style, styles, { backgroundColor: colors.grayWhite }]}></View>
 	);
 }
 
