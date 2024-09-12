@@ -1,15 +1,21 @@
 import Card from '@/components/Card';
 import PokemonCard from '@/components/pokemon/PokemonCard';
 import ThemedText from '@/components/ThemedText';
+import { getPokemonId } from '@/functions/pokemons';
+import { useFetchQuery } from '@/hooks/useFetchQuery';
 import { useThemeColors } from '@/hooks/useThemeColors';
-import { FlatList, Image, StyleSheet, View } from 'react-native';
+import {
+	ActivityIndicator,
+	FlatList,
+	Image,
+	StyleSheet,
+	View,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function HomeScreen() {
-	const pokemons = Array.from({ length: 35 }, (_, i) => ({
-		id: i + 1,
-		name: `Pokemon ${i + 1}`,
-	}));
+	const { data, isFetching } = useFetchQuery('pokemon?limit=151');
+	const pokemons = data?.results ?? [];
 	const colors = useThemeColors();
 	return (
 		<SafeAreaView style={[styles.container, { backgroundColor: colors.tint }]}>
@@ -31,11 +37,14 @@ export default function HomeScreen() {
 					numColumns={3}
 					contentContainerStyle={[styles.gridGap, styles.list]}
 					columnWrapperStyle={styles.gridGap}
+					ListFooterComponent={
+						isFetching ? <ActivityIndicator color={colors.tint} /> : null
+					}
 					renderItem={({ item }) => {
 						return (
 							<PokemonCard
-								key={item.id}
-								id={item.id}
+								key={item.url}
+								id={getPokemonId(item.url)}
 								name={item.name}
 								style={{ flex: 1 / 3 }}
 							/>
