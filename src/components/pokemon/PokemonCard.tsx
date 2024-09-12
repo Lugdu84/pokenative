@@ -13,6 +13,9 @@ export default function PokemonCard({ style, id, name }: PokemonCardProps) {
 	const colors = useThemeColors();
 	return (
 		<Card style={[style, styles.card]}>
+			<View
+				style={[styles.shadow, { backgroundColor: colors.grayBackground }]}
+			/>
 			<ThemedText
 				style={styles.id}
 				variant="caption"
@@ -27,9 +30,6 @@ export default function PokemonCard({ style, id, name }: PokemonCardProps) {
 				height={72}
 			/>
 			<ThemedText>{name}</ThemedText>
-			<View
-				style={[styles.shadow, { backgroundColor: colors.grayBackground }]}
-			/>
 		</Card>
 	);
 }
