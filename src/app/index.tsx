@@ -2,7 +2,7 @@ import Card from '@/components/Card';
 import PokemonCard from '@/components/pokemon/PokemonCard';
 import ThemedText from '@/components/ThemedText';
 import { getPokemonId } from '@/functions/pokemons';
-import { useFetchQuery } from '@/hooks/useFetchQuery';
+import { useFetchQuery, useInfiniteFetchQuery } from '@/hooks/useFetchQuery';
 import { useThemeColors } from '@/hooks/useThemeColors';
 import {
 	ActivityIndicator,
@@ -14,8 +14,9 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function HomeScreen() {
-	const { data, isFetching } = useFetchQuery('pokemon?limit=151');
-	const pokemons = data?.results ?? [];
+	const { data, isFetching, fetchNextPage } =
+		useInfiniteFetchQuery('pokemon?limit=21');
+	const pokemons = data?.pages.flatMap((page) => page.results) ?? [];
 	const colors = useThemeColors();
 	return (
 		<SafeAreaView style={[styles.container, { backgroundColor: colors.tint }]}>
@@ -40,6 +41,7 @@ export default function HomeScreen() {
 					ListFooterComponent={
 						isFetching ? <ActivityIndicator color={colors.tint} /> : null
 					}
+					onEndReached={() => fetchNextPage()}
 					renderItem={({ item }) => {
 						return (
 							<PokemonCard
