@@ -1,18 +1,13 @@
 import Card from '@/components/Card';
 import PokemonCard from '@/components/pokemon/PokemonCard';
+import Row from '@/components/Row';
 import SearchBar from '@/components/SearchBar';
 import ThemedText from '@/components/ThemedText';
 import { getPokemonId } from '@/functions/pokemons';
 import { useFetchQuery, useInfiniteFetchQuery } from '@/hooks/useFetchQuery';
 import { useThemeColors } from '@/hooks/useThemeColors';
 import { useState } from 'react';
-import {
-	ActivityIndicator,
-	FlatList,
-	Image,
-	StyleSheet,
-	View,
-} from 'react-native';
+import { ActivityIndicator, FlatList, Image, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function HomeScreen() {
@@ -21,9 +16,16 @@ export default function HomeScreen() {
 	const pokemons = data?.pages.flatMap((page) => page.results) ?? [];
 	const colors = useThemeColors();
 	const [search, setSearch] = useState('');
+	const filteredPokemons = pokemons.filter(
+		(pokemon) =>
+			pokemon.name.includes(search.toLowerCase()) ||
+			getPokemonId(pokemon.url).toString() === search
+	);
 	return (
 		<SafeAreaView style={[styles.container, { backgroundColor: colors.tint }]}>
-			<View style={styles.header}>
+			<Row
+				style={styles.header}
+				gap={16}>
 				<Image
 					source={require('@assets/images/pokeball.png')}
 					width={24}
@@ -34,23 +36,23 @@ export default function HomeScreen() {
 					color="grayLight">
 					Pokédex
 				</ThemedText>
-			</View>
-			<View>
+			</Row>
+			<Row>
 				<SearchBar
 					value={search}
 					onChange={setSearch}
 				/>
-			</View>
+			</Row>
 			<Card style={styles.body}>
 				<FlatList
-					data={pokemons}
+					data={filteredPokemons}
 					numColumns={3}
 					contentContainerStyle={[styles.gridGap, styles.list]}
 					columnWrapperStyle={styles.gridGap}
 					ListFooterComponent={
 						isFetching ? <ActivityIndicator color={colors.tint} /> : null
 					}
-					onEndReached={() => fetchNextPage()}
+					onEndReached={search ? undefined : () => fetchNextPage()}
 					renderItem={({ item }) => {
 						return (
 							<PokemonCard
@@ -73,13 +75,12 @@ const styles = StyleSheet.create({
 		padding: 4,
 	},
 	header: {
-		flexDirection: 'row',
-		alignItems: 'center',
-		padding: 12,
-		gap: 16,
+		paddingHorizontal: 12,
+		paddingVertical: 8,
 	},
 	body: {
 		flex: 1,
+		marginTop: 24,
 	},
 	gridGap: {
 		gap: 8,
