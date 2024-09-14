@@ -1,9 +1,11 @@
 import Card from '@/components/Card';
 import PokemonCard from '@/components/pokemon/PokemonCard';
+import SearchBar from '@/components/SearchBar';
 import ThemedText from '@/components/ThemedText';
 import { getPokemonId } from '@/functions/pokemons';
 import { useFetchQuery, useInfiniteFetchQuery } from '@/hooks/useFetchQuery';
 import { useThemeColors } from '@/hooks/useThemeColors';
+import { useState } from 'react';
 import {
 	ActivityIndicator,
 	FlatList,
@@ -18,6 +20,7 @@ export default function HomeScreen() {
 		useInfiniteFetchQuery('pokemon?limit=21');
 	const pokemons = data?.pages.flatMap((page) => page.results) ?? [];
 	const colors = useThemeColors();
+	const [search, setSearch] = useState('');
 	return (
 		<SafeAreaView style={[styles.container, { backgroundColor: colors.tint }]}>
 			<View style={styles.header}>
@@ -31,6 +34,12 @@ export default function HomeScreen() {
 					color="grayLight">
 					Pokédex
 				</ThemedText>
+			</View>
+			<View>
+				<SearchBar
+					value={search}
+					onChange={setSearch}
+				/>
 			</View>
 			<Card style={styles.body}>
 				<FlatList
