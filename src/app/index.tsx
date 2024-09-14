@@ -13,14 +13,20 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 export default function HomeScreen() {
 	const { data, isFetching, fetchNextPage } =
 		useInfiniteFetchQuery('pokemon?limit=21');
-	const pokemons = data?.pages.flatMap((page) => page.results) ?? [];
+	const pokemons =
+		data?.pages.flatMap((page) =>
+			page.results.map((r) => ({ ...r, id: getPokemonId(r.url) }))
+		) ?? [];
 	const colors = useThemeColors();
 	const [search, setSearch] = useState('');
-	const filteredPokemons = pokemons.filter(
-		(pokemon) =>
-			pokemon.name.includes(search.toLowerCase()) ||
-			getPokemonId(pokemon.url).toString() === search
-	);
+	const [sortKey, setSortKey] = useState<'id' | 'name'>('id');
+	const filteredPokemons = [
+		...pokemons.filter(
+			(pokemon) =>
+				pokemon.name.includes(search.toLowerCase()) ||
+				pokemon.id.toString() === search
+		),
+	].sort((a, b) => (a[sortKey] > b[sortKey] ? 1 : -1));
 	return (
 		<SafeAreaView style={[styles.container, { backgroundColor: colors.tint }]}>
 			<Row
@@ -56,8 +62,8 @@ export default function HomeScreen() {
 					renderItem={({ item }) => {
 						return (
 							<PokemonCard
-								key={item.url}
-								id={getPokemonId(item.url)}
+								key={item.id}
+								id={item.id}
 								name={item.name}
 								style={{ flex: 1 / 3 }}
 							/>
