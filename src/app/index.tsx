@@ -4,7 +4,7 @@ import Row from '@/components/Row';
 import SearchBar from '@/components/SearchBar';
 import ThemedText from '@/components/ThemedText';
 import { getPokemonId } from '@/functions/pokemons';
-import { useFetchQuery, useInfiniteFetchQuery } from '@/hooks/useFetchQuery';
+import { useInfiniteFetchQuery } from '@/hooks/useFetchQuery';
 import { useThemeColors } from '@/hooks/useThemeColors';
 import { useState } from 'react';
 import { ActivityIndicator, FlatList, Image, StyleSheet } from 'react-native';
@@ -62,13 +62,13 @@ export default function HomeScreen() {
 					renderItem={({ item }) => {
 						return (
 							<PokemonCard
-								key={item.id}
 								id={item.id}
 								name={item.name}
 								style={{ flex: 1 / 3 }}
 							/>
 						);
 					}}
+					keyExtractor={(item) => item.id.toString()}
 				/>
 			</Card>
 		</SafeAreaView>
