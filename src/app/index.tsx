@@ -2,6 +2,7 @@ import Card from '@/components/Card';
 import PokemonCard from '@/components/pokemon/PokemonCard';
 import Row from '@/components/Row';
 import SearchBar from '@/components/SearchBar';
+import SortButton from '@/components/SortButton';
 import ThemedText from '@/components/ThemedText';
 import { getPokemonId } from '@/functions/pokemons';
 import { useInfiniteFetchQuery } from '@/hooks/useFetchQuery';
@@ -43,10 +44,14 @@ export default function HomeScreen() {
 					Pokédex
 				</ThemedText>
 			</Row>
-			<Row>
+			<Row gap={16}>
 				<SearchBar
 					value={search}
 					onChange={setSearch}
+				/>
+				<SortButton
+					value={sortKey}
+					onChange={setSortKey}
 				/>
 			</Row>
 			<Card style={styles.body}>
