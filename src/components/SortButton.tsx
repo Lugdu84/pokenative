@@ -1,9 +1,19 @@
 import { useThemeColors } from '@/hooks/useThemeColors';
-import { useState } from 'react';
-import { StyleSheet, View, Image, Pressable, Modal, Text } from 'react-native';
+import { useRef, useState } from 'react';
+import {
+	StyleSheet,
+	View,
+	Image,
+	Pressable,
+	Modal,
+	Text,
+	Dimensions,
+} from 'react-native';
 import ThemedText from './ThemedText';
 import Card from './Card';
 import Row from './Row';
+import Radio from './Radio';
+import { Shadows } from './Shadows';
 
 type valueType = 'id' | 'name';
 
@@ -15,23 +25,38 @@ type SortButtonProps = {
 const options = [
 	{ label: 'Number', value: 'id' },
 	{ label: 'Name', value: 'name' },
-];
+] as const;
 
 export default function SortButton({ value, onChange }: SortButtonProps) {
 	const colors = useThemeColors();
+	const buttonRef = useRef<View>(null);
 	const [showModal, setShowModal] = useState(false);
+	const [position, setPosition] = useState<null | {
+		top: number;
+		right: number;
+	}>(null);
 
 	const onButtonPress = () => {
+		buttonRef.current?.measureInWindow((x, y, width, height) => {
+			setPosition({
+				top: y + height,
+				right: Dimensions.get('window').width - x - width,
+			});
+			setShowModal(true);
+		});
 		setShowModal(true);
 	};
 
 	const onClose = () => {
 		setShowModal(false);
 	};
+
 	return (
 		<>
 			<Pressable onPress={onButtonPress}>
-				<View style={[styles.button, { backgroundColor: colors.grayWhite }]}>
+				<View
+					ref={buttonRef}
+					style={[styles.button, { backgroundColor: colors.grayWhite }]}>
 					<Image
 						source={
 							value === 'id'
@@ -49,7 +74,14 @@ export default function SortButton({ value, onChange }: SortButtonProps) {
 				<Pressable
 					style={styles.backdrop}
 					onPress={onClose}>
-					<View style={[styles.popup, { backgroundColor: colors.tint }]}>
+					<View
+						style={[
+							styles.popup,
+							{
+								backgroundColor: colors.tint,
+								...position,
+							},
+						]}>
 						<ThemedText
 							style={styles.title}
 							variant="subtitle2"
@@ -58,13 +90,18 @@ export default function SortButton({ value, onChange }: SortButtonProps) {
 						</ThemedText>
 						<Card style={styles.card}>
 							{options.map((option) => (
-								<Row key={option.value}>
-									<ThemedText
-										variant="subtitle1"
-										color="grayDark">
-										{option.label}
-									</ThemedText>
-								</Row>
+								<Pressable
+									key={option.value}
+									onPress={() => onChange(option.value)}>
+									<Row gap={8}>
+										<Radio checked={option.value === value} />
+										<ThemedText
+											variant="subtitle1"
+											color="grayDark">
+											{option.label}
+										</ThemedText>
+									</Row>
+								</Pressable>
 							))}
 						</Card>
 					</View>
@@ -97,10 +134,8 @@ const styles = StyleSheet.create({
 		gap: 16,
 		borderRadius: 12,
 		position: 'absolute',
-		top: 100,
-		left: 50,
-		width: 200,
-		height: 200,
+		width: 113,
+		...Shadows.dp2,
 	},
 	title: {
 		paddingLeft: 16,
