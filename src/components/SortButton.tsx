@@ -1,6 +1,9 @@
 import { useThemeColors } from '@/hooks/useThemeColors';
 import { useState } from 'react';
 import { StyleSheet, View, Image, Pressable, Modal, Text } from 'react-native';
+import ThemedText from './ThemedText';
+import Card from './Card';
+import Row from './Row';
 
 type valueType = 'id' | 'name';
 
@@ -8,6 +11,11 @@ type SortButtonProps = {
 	value: valueType;
 	onChange: (value: valueType) => void;
 };
+
+const options = [
+	{ label: 'Number', value: 'id' },
+	{ label: 'Name', value: 'name' },
+];
 
 export default function SortButton({ value, onChange }: SortButtonProps) {
 	const colors = useThemeColors();
@@ -40,8 +48,26 @@ export default function SortButton({ value, onChange }: SortButtonProps) {
 				onRequestClose={onClose}>
 				<Pressable
 					style={styles.backdrop}
-					onPress={() => setShowModal(false)}>
-					<Text>Sort Modal !</Text>
+					onPress={onClose}>
+					<View style={[styles.popup, { backgroundColor: colors.tint }]}>
+						<ThemedText
+							style={styles.title}
+							variant="subtitle2"
+							color="grayWhite">
+							Sort by:
+						</ThemedText>
+						<Card style={styles.card}>
+							{options.map((option) => (
+								<Row key={option.value}>
+									<ThemedText
+										variant="subtitle1"
+										color="grayDark">
+										{option.label}
+									</ThemedText>
+								</Row>
+							))}
+						</Card>
+					</View>
 				</Pressable>
 			</Modal>
 		</>
@@ -64,5 +90,24 @@ const styles = StyleSheet.create({
 	backdrop: {
 		flex: 1,
 		backgroundColor: 'rgba(0, 0, 0, 0.3)',
+	},
+	popup: {
+		padding: 4,
+		paddingTop: 16,
+		gap: 16,
+		borderRadius: 12,
+		position: 'absolute',
+		top: 100,
+		left: 50,
+		width: 200,
+		height: 200,
+	},
+	title: {
+		paddingLeft: 16,
+	},
+	card: {
+		paddingVertical: 16,
+		paddingHorizontal: 20,
+		gap: 16,
 	},
 });
