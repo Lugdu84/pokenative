@@ -10,7 +10,6 @@ import { useInfiniteFetchQuery } from '@/hooks/useFetchQuery';
 import { useThemeColors } from '@/hooks/useThemeColors';
 import { useState } from 'react';
 import { ActivityIndicator, FlatList, Image, StyleSheet } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function HomeScreen() {
 	const { data, isFetching, fetchNextPage } =
