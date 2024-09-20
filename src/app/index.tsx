@@ -1,5 +1,6 @@
 import Card from '@/components/Card';
 import PokemonCard from '@/components/pokemon/PokemonCard';
+import RootView from '@/components/RootView';
 import Row from '@/components/Row';
 import SearchBar from '@/components/SearchBar';
 import SortButton from '@/components/SortButton';
@@ -29,7 +30,7 @@ export default function HomeScreen() {
 		),
 	].sort((a, b) => (a[sortKey] > b[sortKey] ? 1 : -1));
 	return (
-		<SafeAreaView style={[styles.container, { backgroundColor: colors.tint }]}>
+		<RootView>
 			<Row
 				style={styles.header}
 				gap={16}>
@@ -76,15 +77,11 @@ export default function HomeScreen() {
 					keyExtractor={(item) => item.id.toString()}
 				/>
 			</Card>
-		</SafeAreaView>
+		</RootView>
 	);
 }
 
 const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		padding: 4,
-	},
 	header: {
 		paddingHorizontal: 12,
 		paddingVertical: 8,
