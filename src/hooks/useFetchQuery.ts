@@ -22,11 +22,19 @@ type API = {
 	};
 };
 
-export const useFetchQuery = <T extends keyof API>(query: T) => {
+export const useFetchQuery = <T extends keyof API>(
+	query: T,
+	params?: Record<string, string | number>
+) => {
+	const localUrl = Object.entries(params ?? {}).reduce(
+		(acc, [key, value]) => acc.replaceAll(`[${key}]`, value),
+		query
+	);
+
 	return useQuery({
-		queryKey: [query],
+		queryKey: [localUrl],
 		queryFn: async () => {
-			return fetch(`${endpoint}${query}`, {
+			return fetch(`${endpoint}${localUrl}`, {
 				headers: { Accept: 'application/json' },
 			}).then((res) => res.json() as Promise<API[T]>);
 		},

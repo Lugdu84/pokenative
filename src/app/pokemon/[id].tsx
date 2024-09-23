@@ -1,24 +1,32 @@
 import RootView from '@/components/RootView';
 import Row from '@/components/Row';
 import ThemedText from '@/components/ThemedText';
-import { useLocalSearchParams } from 'expo-router';
-import { StyleSheet, Image } from 'react-native';
+import { useFetchQuery } from '@/hooks/useFetchQuery';
+import { router, useLocalSearchParams } from 'expo-router';
+import { StyleSheet, Image, Pressable } from 'react-native';
 
 export default function PokemonDetailScreen() {
 	const { id } = useLocalSearchParams<{ id: string }>();
+	const { data: pokemon } = useFetchQuery('pokemon/[id]', { id });
 
 	return (
 		<RootView>
 			<Row style={styles.header}>
-				<Row>
-					<Image
-						source={require('@assets/images/arrow_back.png')}
-						style={{ width: 32, height: 32, tintColor: 'white' }}
-					/>
+				<Image
+					style={styles.pokeball}
+					source={require('@assets/images/pokeball_big.png')}
+				/>
+				<Row gap={8}>
+					<Pressable onPress={router.back}>
+						<Image
+							source={require('@assets/images/arrow_back.png')}
+							style={{ width: 32, height: 32, tintColor: 'white' }}
+						/>
+					</Pressable>
 					<ThemedText
 						color="grayWhite"
 						variant="headline">
-						Pokemon Detail
+						{pokemon?.name}
 					</ThemedText>
 				</Row>
 				<ThemedText
@@ -35,6 +43,14 @@ const styles = StyleSheet.create({
 	header: {
 		margin: 20,
 		justifyContent: 'space-between',
+	},
+	pokeball: {
+		width: 208,
+		height: 208,
+		opacity: 0.1,
+		position: 'absolute',
+		right: 8,
+		top: 8,
 	},
 });
 
