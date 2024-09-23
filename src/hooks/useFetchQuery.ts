@@ -27,6 +27,7 @@ export const useFetchQuery = <T extends keyof API>(
 	params?: Record<string, string | number>
 ) => {
 	const localUrl = Object.entries(params ?? {}).reduce(
+		// @ts-ignore
 		(acc, [key, value]) => acc.replaceAll(`[${key}]`, value),
 		query
 	);
