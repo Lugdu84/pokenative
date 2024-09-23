@@ -1,3 +1,4 @@
+import { types } from '@babel/core';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 
 const endpoint = 'https://pokeapi.co/api/v2/';
@@ -7,6 +8,17 @@ type API = {
 		count: number;
 		next: string | null;
 		results: { name: string; url: string }[];
+	};
+	'pokemon/[id]': {
+		id: number;
+		name: string;
+		url: string;
+		weight: number;
+		height: number;
+		moves: { move: { name: string } }[];
+		stats: { base_stat: number; stat: { name: string } }[];
+		cries: { latest: string };
+		types: { type: { name: string } }[];
 	};
 };
 

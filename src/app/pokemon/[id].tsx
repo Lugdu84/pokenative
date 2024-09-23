@@ -1,7 +1,8 @@
 import RootView from '@/components/RootView';
 import Row from '@/components/Row';
+import ThemedText from '@/components/ThemedText';
 import { useLocalSearchParams } from 'expo-router';
-import { Text, StyleSheet, Image } from 'react-native';
+import { StyleSheet, Image } from 'react-native';
 
 export default function PokemonDetailScreen() {
 	const { id } = useLocalSearchParams<{ id: string }>();
@@ -14,9 +15,18 @@ export default function PokemonDetailScreen() {
 						source={require('@assets/images/arrow_back.png')}
 						style={{ width: 32, height: 32, tintColor: 'white' }}
 					/>
+					<ThemedText
+						color="grayWhite"
+						variant="headline">
+						Pokemon Detail
+					</ThemedText>
 				</Row>
+				<ThemedText
+					color="grayWhite"
+					variant="subtitle2">
+					#{id.padStart(3, '0')}
+				</ThemedText>
 			</Row>
-			<Text>Detail du pokemon : {id}</Text>
 		</RootView>
 	);
 }
